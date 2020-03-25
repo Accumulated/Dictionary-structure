@@ -7,7 +7,6 @@
 //============================================================================
 
 
-#include "dict.h"
 #include <iostream>
 #include <stdlib.h>
 #include <assert.h>
@@ -15,12 +14,17 @@
 #include <limits>
 #include <string.h>
 #include <sstream>
+#include "dict.h"
 
 
 using namespace std;
 
+int i = 0;
+std:: string buffer;
+
 // a flag for operations that searches for a string
 bool string_is_found_do_not_repeat = false;
+
 
 long int NumberOfRightWords = 0, NumberOfCharacters = 0, NumberOfWrongWords = 0, NumberOfDistinctWords = 0, Iam_the_Most_frequent = 0;
 int general_purpose_index = 0, arr_index = 0, Locked_Flag = 0;
@@ -71,10 +75,7 @@ list:: list(const char *FileToOpen)
 	}
 
 	// you should proceed to the commands files
-	else
-	{
 
-	}
 
 	/* End of dictionary in loading stage darling*/
 }
@@ -339,7 +340,7 @@ bool list :: Dictionary_Load(const char *FileToOpen)
 }
 
 // Returns true if word is in dictionary else false
-bool list :: check(const char *word, int mode)
+bool list :: check(const string word, int mode)
 {
     // Restart from beginning
     int k = 0;
@@ -578,7 +579,7 @@ bool list :: starting_with(const char *word)
 
     if(string_is_found_do_not_repeat == true)
     {
-    	cout << "a7a? \n";
+    	//cout << "a7a? \n";
     	string_is_found_do_not_repeat = false;
     }
 
@@ -657,7 +658,7 @@ bool list :: starting_with_helper(const char *word)
 bool list :: Searching_For_Pattern_Initialize(const char *word)
 {
 	ptr_tmp = dict_root;
-	cout << "searching :: \n";
+	//cout << "searching :: \n";
     general_purpose_index = 0;
 
 	Searching_For_Pattern(word, Search_For_Pattern);
@@ -679,7 +680,7 @@ bool list :: Searching_For_Pattern_Initialize(const char *word)
 bool list :: Searching_For_Pattern_With_lines_Initialize(const char *word)
 {
 	ptr_tmp = dict_root;
-	cout << "searching for words and printing their lines:: \n";
+	//cout << "searching for words and printing their lines:: \n";
 
 	// Prepare for line printing
 	Search_For_Pattern_With_Line_Numbers = true;
@@ -1000,123 +1001,248 @@ list :: ~list()
 
 /* ALL COMING ARE FOR OPERATIONS */
 
-// Check for the required operation and execute it if it's a valid one
-int CheckMyOperationAndExecute(char *x, int argc, char **y)
+
+int list :: CheckMyOperationAndExecute(const char *File_TO_OPEN)
+{
+	// Simulate main funcation's argc and argv
+	string argument_vector1, argument_vector2;
+	int argument_counter = 0;
+
+	// Indication for the current word iam at
+	bool The_Most_Important_Flag = true;
+
+	// Define the file that contains the dictionary
+	ifstream file;
+
+	// Open command file as an input
+	file.open(File_TO_OPEN, ios::in);
+
+	// Check for file status
+	if (!file.is_open())
+	{
+		cout << "File not found\n";
+		return false;
+	}
+
+	// Buffer for a word in a line
+	string word(LENGTH, '/');
+
+	// Buffer for a line fetched from the file
+	string line;
+
+	// Ready to read commands
+	 while (!file.eof())
+	 {
+		 // Get a whole line
+		getline(file, line);
+
+		// Initialize ss to read the whole line for further manipulation
+		stringstream ss(line);
+
+		// Strings are separated by space
+		// Retrieve the first word
+
+		// Skip the first spaces if any
+		while(getline(ss, word, ' '))
+		{
+			if(word.compare("") == 0);
+			else
+				break;
+		}
+
+		// That's an empty line, watch out and break out of it
+		if(word.compare("") == 0)
+		{
+			// Do nothing
+		}
+
+		// it's a valid word, keep going
+		else
+		{
+			// assign the word to argv[1]
+			argument_vector1 = word;
+
+			// Retrieve the second word
+
+			// Skip the first spaces if any
+			while(getline(ss, word, ' '))
+			{
+				// Indication that there is still words on the line
+				The_Most_Important_Flag = false;
+				//cout << "Checking1....\n";
+				if(word.compare("") == 0);
+				else
+					break;
+			}
+
+			// Check for the word to see if still ""
+			if(word.compare("") == 0 || The_Most_Important_Flag)
+			{
+				The_Most_Important_Flag = true;
+				argument_counter = 1;
+				/* you are here in case argument counter == 1 only*/
+				Operations_Help_Decide(argument_counter, argument_vector1, argument_vector2);
+				// Here the word should have a valid string, print it
+				//cout << word << " is here and confirmed as an operation\n";
+			}
+			else
+			{
+				The_Most_Important_Flag = true;
+
+				argument_counter = 2;
+				//cout << argument_vector1 << " is the operation\n";
+				//cout << word << " is here and confirmed as an argument\n";
+				argument_vector2 = word;
+
+				// Retrieve the second word
+
+				// Skip the first spaces if any
+				while(getline(ss, word, ' '))
+				{
+					The_Most_Important_Flag = false;
+					//cout << "checking2..\n";
+
+					if(word.compare("") == 0);
+					else
+						break;
+				}
+
+				// Valid data, 2 arguments
+				if(word.compare("") == 0 || The_Most_Important_Flag)
+				{
+					/* You are here in case argument counter == 2 only */
+					Operations_Help_Decide(argument_counter, argument_vector1, argument_vector2);
+					The_Most_Important_Flag = true;
+				}
+
+				// 3 Arguments are invalid arguments
+				else
+				{
+					The_Most_Important_Flag = true;
+					// Reset the counter
+					argument_counter = 0;
+					//cout << "Invalid number of argumentss\n" << word << endl;
+				}
+			}
+
+
+		}
+	 }
+
+	 return 1;
+}
+
+
+
+bool list :: Operations_Help_Decide(int argc, std:: string op, string ptr)
 {
 	int i = 0;
 
-	// Iterate over each operation to check
-	for(i = 0; i < NoOfOperations; i++)
+	switch(argc)
 	{
-		// Compare strings to find an operation from the list
-		if(My_Compare_string(x, operationsArray[i]))
-		{
-			// Go execute the corresponding function
-			break;
-		}
-
-		// Operation is found and break the loop
-		else;
-	}
-
-
-	// Check for operation required and raise its flag
-	switch(i)
-	{
-		case 0:
-			break;
-
+		// Wordcount, distWords,charCout, Frequentword
 		case 1:
+
+			// These operations don't require any input
+			for(i = 0; i < NoOfOperations / 2; i++)
+			{
+				if(op.compare(operationsArray[i]) == 0)
+				{
+					// Inputs other than i, don't matter.
+					Operations_Help_Decide_Versio2(i, ptr);
+
+					return true;
+				}
+			}
+
+			cout << "Invalid operationnn\n";
+			return false;
 			break;
 
+		// CountWord, starting, containing, search
 		case 2:
-			break;
 
-		case 3:
-			break;
+			for(i = NoOfOperations / 2; i < NoOfOperations; i++)
+			{
+				if(op.compare(operationsArray[i]) == 0)
+				{
+					// send a string and a pointer, choose in the function which one you need
+					Operations_Help_Decide_Versio2(i, ptr);
+					return true;
+				}
+			}
 
-		case 4:
-			break;
+			cout << "Invalid operation\n";
+			return false;
 
-		case 5:
-			break;
-
-		case 6:
-			break;
-		case 7:
-			break;
-
-		case 8:
 			break;
 
 		default:
-			cout << "Undefined Command" << "\n";
-			return EXIT_FAILURE;
+			cout << "AN ERROR HAPPENED\n";
 			break;
 	}
 
-	return EXIT_SUCCESS;
+	return true;
 }
 
 
-// Compare 2 strings for either matching or not
-int My_Compare_string(const char *str1, const char* str2)
+void list :: Operations_Help_Decide_Versio2(int i, string str)
 {
-	int equal = 0;
-	equal = LengthString(str1, str2, Normal_MODE_FOR_STRING_LENGTH_COMPARISON);		// 1
-	if(equal)
+
+	int j = 0;
+
+	int x = 0;
+
+	x = str.length();
+
+	char *argv2 = new char[x];	// argument for the operation
+
+
+	for(j = 0; str[j] != '\0'; j++)
 	{
-		for(int i = 0; str1[i] != '\0'; i++)
-		{
-			if(str1[i] != str2[i])
-				// False = 0
-				return 0;
-		}
-		// True = 1
-		return 1;
+		argv2[j] = str[j];
 	}
-	// False = 0
-	return 0;
+	argv2[j] = '\0';
+
+
+	switch(i)
+	{
+		case 0:
+			Dictionary_size_words();
+			break;
+
+		case 1:
+			Dictionary_distinct_words();
+			break;
+
+		case 2:
+			Dictionary_size_chars();
+			break;
+
+		case 3:
+			Dictionary_Frequent_Word_Initialize("start");
+			break;
+
+		case 4:
+			check(str, WORD_COUNT);
+			break;
+
+		case 5:
+			starting_with(argv2);
+			break;
+
+		case 6:
+			Searching_For_Pattern_Initialize(argv2);
+			break;
+
+		case 7:
+			Searching_For_Pattern_With_lines_Initialize(argv2);
+			break;
+
+		default:
+			cout << "NO FUCKIN WAY!!!!\n";
+			break;
+	}
+
+	delete [] argv2;
 }
-
-
-// Get string length or compare two strings for the same length
-int LengthString(const char *str1, const char *str2, int mode)
-{
-	int i = 0, k = 0;
-	if(mode == ABNORMAL_MODE_FOR_STRING_LENGTH_RETURN)
-	{
-		while(str1[i] != '\0')
-		{
-			i++;
-		}
-		i++;
-
-		return i;
-	}
-	else
-	{
-		while(str1[i] != '\0')
-		{
-			i++;
-		}
-
-		while(str2[k] != '\0')
-		{
-			k++;
-		}
-
-		if(k == i)
-		{
-			// True = 1
-			return 1;
-		}
-		// false = 0
-		return 0;
-	}
-
-	// false = 0
-	return 0;
-}
-
-

@@ -21,7 +21,9 @@ int main(int argc, char *argv[])
     // Buffer for a word
     //char word[LENGTH];
 
-	list my_list("m.txt");
+	list my_list(argv[1]);
+	//cout << "iam here\n";
+	my_list.CheckMyOperationAndExecute(argv[2]);
 
 
 	// 1- my_list.Dictionary_size_words();
@@ -43,6 +45,7 @@ int main(int argc, char *argv[])
 		my_list.starting_with("a");
 		my_list.starting_with("a");
 		 */
+	//my_list.starting_with("se");
 
 	// 7-
 		/*
@@ -51,6 +54,7 @@ int main(int argc, char *argv[])
 		my_list.Searching_For_Pattern_Initialize("n");
 		my_list.Searching_For_Pattern_Initialize("new");
 		 */
+	//my_list.Searching_For_Pattern_Initialize("is");
 
 	// 8-
 		/*

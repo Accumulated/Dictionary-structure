@@ -8,6 +8,8 @@
 #ifndef DICT_H_
 #define DICT_H_
 
+
+
 // Represents number of children for each node in a trie
 #define N	36
 #define LENGTH	47
@@ -73,7 +75,7 @@ class list
 
 		// Functions go right here
 		bool Dictionary_Load(const char *FileToOpen);
-		bool check(const char *word, int mode);
+		bool check(std::string word, int mode);
 		bool starting_with(const char *word);
 		bool starting_with_helper(const char *word);
 		bool Searching_For_Pattern(const char *word, int mode);
@@ -88,17 +90,15 @@ class list
 		bool Delete_VIP();
 		bool List_show_Whole();
 		void Reset_all_Generals(void);
-
-
-
+		int CheckMyOperationAndExecute(const char *File_TO_OPEN);
+		bool Operations_Help_Decide(int argc, std:: string op, std:: string ptr);
+		void Operations_Help_Decide_Versio2(int i, std :: string str);
 
 
 
 };
 
 void MyToLower(char *x);
-int My_Compare_string(const char *str1, const char* str2);
-int LengthString(const char *str1, const char *str2, int mode);
 
 
 
