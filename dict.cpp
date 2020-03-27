@@ -305,17 +305,12 @@ bool list :: Dictionary_Load(const char *FileToOpen)
 				/* Repeated time for each word is added while loading*/
 				ptr_tmp -> Repeated_times = ptr_tmp -> Repeated_times + 1;
 
-				// Check if repeated so it's not a distinct
-				if(ptr_tmp -> Repeated_times == 2)
-				{
-					NumberOfDistinctWords = NumberOfDistinctWords - 1;
-				}
 
 				// It's your first time indeed
-				else if(ptr_tmp -> Repeated_times == 1)
+				if(ptr_tmp -> Repeated_times == 1)
 					NumberOfDistinctWords++;
 
-				else;
+				//else;
 
 				/* Frequent word is decided here */
 				if(Iam_the_Most_frequent <= ptr_tmp -> Repeated_times)
@@ -646,7 +641,7 @@ bool list :: starting_with_helper(const char *word)
     	general_purpose_string[general_purpose_index] = '\0';
 
     	// 2- print the string
-    	cout << general_purpose_string << ": " << ptr_tmp -> Repeated_times << "\t";
+    	cout << general_purpose_string << ": " << ptr_tmp -> Repeated_times << " ";
 
     	// 3-general purpose index and the string are becoming zero
     	general_purpose_index = 0;
@@ -849,7 +844,7 @@ bool list :: Searching_For_Pattern(const char *word, int mode)
 				    	// For error handling sake
 				    	string_is_found_do_not_repeat = true;
 
-				    	cout << general_purpose_string << ": " << ptr_tmp -> Repeated_times << "\t";
+				    	cout << general_purpose_string << ": " << ptr_tmp -> Repeated_times << " ";
 
 						//cout << general_purpose_string << "\n";
 						// Set the pointer to the very start of the local linked list
@@ -881,7 +876,7 @@ bool list :: Searching_For_Pattern(const char *word, int mode)
 
 						// updated
 						else
-					    	cout << general_purpose_string << ": " << ptr_tmp -> Repeated_times << "\t";
+					    	cout << general_purpose_string << ": " << ptr_tmp -> Repeated_times << " ";
 
 					}
 				}
@@ -1121,7 +1116,7 @@ int list :: CheckMyOperationAndExecute(const char *File_TO_OPEN)
 					The_Most_Important_Flag = true;
 					// Reset the counter
 					argument_counter = 0;
-					//cout << "Invalid number of argumentss\n" << word << endl;
+					cout << "Incorrect number of arguments\n";
 				}
 			}
 
@@ -1155,7 +1150,7 @@ bool list :: Operations_Help_Decide(int argc, std:: string op, string ptr)
 				}
 			}
 
-			cout << "Invalid operationnn\n";
+			cout << "Undefined commandn\n";
 			return false;
 			break;
 
@@ -1172,7 +1167,7 @@ bool list :: Operations_Help_Decide(int argc, std:: string op, string ptr)
 				}
 			}
 
-			cout << "Invalid operation\n";
+			cout << "Undefined command\n";
 			return false;
 
 			break;
