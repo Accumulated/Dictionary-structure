@@ -41,13 +41,17 @@ const char *operationsArray[NoOfOperations] = {
 		"countWord", "starting", "containing", "search"};
 
 
+const string forbidden[] = {"a", "an", "the", "in", "on", "of", "and",
+	"is", "are"};
+	
+
 // Default constructor for a list
 list:: list(const char *FileToOpen)
 {
 
 	/* start the list darling */
 
-	cout << "Default constructor for variable " << this << " is called \n";
+	//cout << "Default constructor for variable " << this << " is called \n";
 
 	// Reset the list
 	NumberOfOccurances = 0;
@@ -329,7 +333,7 @@ bool list :: Dictionary_Load(const char *FileToOpen)
 	 }
 
 
-     cout << "Dictionary is loaded \n";
+     //cout << "Dictionary is loaded \n";
      file.close();
 	return true;
 }
@@ -565,8 +569,6 @@ bool list :: starting_with(const char *word)
     if(ptr_tmp -> is_word == true)
     	cout << word << "\n";
 
-    // Confirm the pointer position
-    // cout << "The pointer after the for loop is at character :: " << ptr_tmp -> parent_name << "\n";
 
     // Start traversing the words and print them out
     starting_with_helper(word);
@@ -574,7 +576,6 @@ bool list :: starting_with(const char *word)
 
     if(string_is_found_do_not_repeat == true)
     {
-    	//cout << "a7a? \n";
     	string_is_found_do_not_repeat = false;
     }
 
@@ -843,13 +844,21 @@ bool list :: Searching_For_Pattern(const char *word, int mode)
 					{
 				    	// For error handling sake
 				    	string_is_found_do_not_repeat = true;
-
-				    	cout << general_purpose_string << ": " << ptr_tmp -> Repeated_times << " ";
-
+						
 						//cout << general_purpose_string << "\n";
-						// Set the pointer to the very start of the local linked list
-						general_root_pointer_for_any_Independent_node = ptr_tmp -> line_Number_is;
-						List_show_Whole();
+						if(Search_For_Pattern_With_Line_Numbers == true)
+						{
+							cout << general_purpose_string << ": lines ";
+							// Set the pointer to the very start of the local linked list
+							general_root_pointer_for_any_Independent_node = ptr_tmp -> line_Number_is;
+							List_show_Whole();
+							// Iam new
+						}
+
+						// updated
+						else
+					    	cout << general_purpose_string << ": " << ptr_tmp -> Repeated_times << " ";
+
 					}
 				}
 
@@ -858,8 +867,7 @@ bool list :: Searching_For_Pattern(const char *word, int mode)
 					string s = general_purpose_string;
 
 					// Paten check
-					unsigned int x = s.find(word);
-					if(x != string::npos)
+					if(s.find(word) != string::npos)
 					{
 				    	// For error handling sake
 				    	string_is_found_do_not_repeat = true;
@@ -893,10 +901,26 @@ bool list :: Searching_For_Pattern(const char *word, int mode)
     		// It's for distinct words function
     		if(ptr_tmp -> is_word == true && ptr_tmp -> Repeated_times == Iam_the_Most_frequent)
     		{
+				bool Just_Indication = false;
+
 				// 1- Prepare for printing
 				general_purpose_string[general_purpose_index] = '\0';
 
-    			cout << general_purpose_string <<" ";
+				for(int j = 0; j < 9; j++)
+				{
+					if(forbidden[j] == general_purpose_string)
+					{
+						Just_Indication = true;
+					}
+				}
+				
+				if(Just_Indication == true);
+				else
+				{
+					Just_Indication = true;
+					cout << general_purpose_string <<" ";
+				}
+					
 
 				// 3-general purpose index and the string are becoming zero
 				general_purpose_index = 0;
@@ -990,12 +1014,11 @@ list :: ~list()
 {
 	ptr_tmp = dict_root;
 	unload();
-	cout << "Deconstructor is called for " << this << " object\n";
+	//cout << "Deconstructor is called for " << this << " object\n";
 }
 
 
 /* ALL COMING ARE FOR OPERATIONS */
-
 
 int list :: CheckMyOperationAndExecute(const char *File_TO_OPEN)
 {
@@ -1064,7 +1087,6 @@ int list :: CheckMyOperationAndExecute(const char *File_TO_OPEN)
 			{
 				// Indication that there is still words on the line
 				The_Most_Important_Flag = false;
-				//cout << "Checking1....\n";
 				if(word.compare("") == 0);
 				else
 					break;
@@ -1078,15 +1100,12 @@ int list :: CheckMyOperationAndExecute(const char *File_TO_OPEN)
 				/* you are here in case argument counter == 1 only*/
 				Operations_Help_Decide(argument_counter, argument_vector1, argument_vector2);
 				// Here the word should have a valid string, print it
-				//cout << word << " is here and confirmed as an operation\n";
 			}
 			else
 			{
 				The_Most_Important_Flag = true;
 
 				argument_counter = 2;
-				//cout << argument_vector1 << " is the operation\n";
-				//cout << word << " is here and confirmed as an argument\n";
 				argument_vector2 = word;
 
 				// Retrieve the second word
@@ -1095,7 +1114,6 @@ int list :: CheckMyOperationAndExecute(const char *File_TO_OPEN)
 				while(getline(ss, word, ' '))
 				{
 					The_Most_Important_Flag = false;
-					//cout << "checking2..\n";
 
 					if(word.compare("") == 0);
 					else
@@ -1114,9 +1132,9 @@ int list :: CheckMyOperationAndExecute(const char *File_TO_OPEN)
 				else
 				{
 					The_Most_Important_Flag = true;
+					cout << "Incorrect number of arguments\n";
 					// Reset the counter
 					argument_counter = 0;
-					cout << "Incorrect number of arguments\n";
 				}
 			}
 
@@ -1150,6 +1168,17 @@ bool list :: Operations_Help_Decide(int argc, std:: string op, string ptr)
 				}
 			}
 
+			// These operations don't require any input
+			for(i = NoOfOperations/ 2; i < NoOfOperations; i++)
+			{
+				if(op.compare(operationsArray[i]) == 0)
+				{
+					// Inputs other than i, don't matter.
+					cout << "Incorrect number of arguments\n";
+					return true;
+				}
+			}
+			
 			cout << "Undefined commandn\n";
 			return false;
 			break;
@@ -1167,6 +1196,16 @@ bool list :: Operations_Help_Decide(int argc, std:: string op, string ptr)
 				}
 			}
 
+			for(i = 0; i < NoOfOperations / 2; i++)
+			{
+				if(op.compare(operationsArray[i]) == 0)
+				{
+					// send a string and a pointer, choose in the function which one you need
+					cout << "Incorrect number of arguments\n";
+					return false;
+				}
+			}
+			
 			cout << "Undefined command\n";
 			return false;
 
